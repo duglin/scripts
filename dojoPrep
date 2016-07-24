@@ -1,0 +1,12 @@
+#!/bin/bash
+
+docker pull ubuntu:14.04
+docker tag ubuntu:14.04 ubuntu
+docker pull tomcat
+docker pull nginx
+docker pull ibmdojo/looper
+docker pull ibmdojo/tiny
+
+export K8S_VERSION=$(curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+
+docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
