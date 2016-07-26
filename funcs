@@ -1,0 +1,47 @@
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+function doit() {
+	set +e
+	echo -n $bold"$"$normal" "
+	if [[ "$SKIP" == "" ]]; then read -s -n 1 ; fi
+	echo -n $bold$*$normal" "
+	echo "$*" >> cmds
+	if [[ "$SKIP" == "" ]]; then read -s -n 1 ; fi
+	echo
+
+	#if [[ "$MORE" == "" ]]; then
+	#    sh -c " $* " 2>&1 | tee out
+	#    rc=${PIPESTATUS[0]}
+	#else
+	#    sh -c " $* " 2>&1 | more | tee out 
+	#    rc=${PIPESTATUS[0]}
+	#fi
+
+	sh -c " $* " &>  out
+	rc=$?
+	# rc=${PIPESTATUS[0]}
+	cat out
+	[[ "$rc" == "0" ]] || exit
+	echo
+	set -e
+}
+
+function comment() {
+	echo -e $bold$*\\n$normal
+}
+
+function wait() {
+	# set -x
+	if [ $1 == "!" ]; then
+		shift
+	    while (sh -c " $* " &> /dev/null); do
+	        sleep 1
+	    done
+	else
+	    while !(sh -c " $* " &> /dev/null); do
+	        sleep 1
+	    done
+	fi
+	# set +x
+}
