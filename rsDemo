@@ -1,0 +1,33 @@
+#!/bin/bash
+
+source funcs
+
+(kubectl delete -f rs.yaml ; kubectl delete rs httpd-rs) &> /dev/null
+wait ! kubectl get rs httpd-rs
+
+set -e
+
+doit cat rs.yaml
+doit kubectl create -f rs.yaml
+doit kubectl get rs
+doit kubectl get pods
+
+comment Waiting for it to start...
+wait kubectl describe rs httpd-rs \| grep \"2 Running\"
+
+doit kubectl describe rs httpd-rs
+IP=$(grep "IP:" out | sed "s/.*IP: *//")
+name=$(kubectl get pods | grep httpd-rs- | head -1 | sed "s/ .*//")
+
+doit kubectl delete pod $name
+doit kubectl describe rs httpd-rs
+
+comment Waiting for it to start...
+wait kubectl describe rs httpd-rs \| grep \"2 Running\"
+
+doit kubectl describe rs httpd-rs
+
+doit kubectl delete -f rs.yaml
+wait ! kubectl get rs httpd-rs
+
+doit kubectl get rs
