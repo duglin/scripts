@@ -6,6 +6,7 @@ docker pull ubuntu:14.04
 docker tag ubuntu:14.04 ubuntu
 docker pull tomcat
 docker pull nginx
+docker pull golang
 docker pull ibmdojo/looper
 docker pull ibmdojo/tiny
 docker pull ibmdojo/httpd
@@ -14,3 +15,21 @@ docker pull ibmdojo/dind
 export K8S_VERSION=$(curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt)
 
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
+
+cd $HOME
+
+if [ ! -d scripts ]; then
+	git clone https://github.com/ibm-dojo/scripts.git
+else
+	cd scripts
+	git pull
+	cd ..
+fi
+
+if [ ! -d scripts ]; then
+	git clone https://github.com/ibm-dojo/goapp.git
+else
+	cd goapp
+	git pull
+	cd ..
+fi
