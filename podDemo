@@ -2,13 +2,15 @@
 
 source funcs
 
-(kubectl delete -f pod.yaml ; kubectl delete pod httpd-pod) &> /dev/null
+dir=$(dirname "$0")
+
+(kubectl delete -f $dir/pod.yaml ; kubectl delete pod httpd-pod) &> /dev/null
 wait ! kubectl get pod httpd-pod
 
 set -e
 
-doit cat pod.yaml
-doit kubectl create -f pod.yaml
+doit cat $dir/pod.yaml
+doit kubectl create -f $dir/pod.yaml
 doit kubectl get pods
 
 comment Waiting for it to start...
@@ -19,7 +21,7 @@ IP=$(grep "IP:" out | sed "s/.*IP: *//")
 
 doit curl $IP
 
-doit kubectl delete -f pod.yaml
+doit kubectl delete -f $dir/pod.yaml
 wait ! kubectl get pod httpd-pod
 
 doit kubectl get pods
