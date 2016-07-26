@@ -16,20 +16,16 @@ export K8S_VERSION=$(curl -sS https://storage.googleapis.com/kubernetes-release/
 
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
-cd $HOME
+pushd $HOME
 
-if [ ! -d scripts ]; then
-	git clone https://github.com/ibm-dojo/scripts.git
-else
-	cd scripts
-	git pull
-	cd ..
-fi
+for repo in scripts goapp webapps; do
+    if [ ! -d $repo ]; then
+	    git clone https://github.com/ibm-dojo/repo.git
+    else
+	    cd $repo
+	    git pull
+	    cd ..
+    fi
+done
 
-if [ ! -d scripts ]; then
-	git clone https://github.com/ibm-dojo/goapp.git
-else
-	cd goapp
-	git pull
-	cd ..
-fi
+popd
