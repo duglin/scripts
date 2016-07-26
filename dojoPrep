@@ -18,7 +18,7 @@ docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
 pushd $HOME
 
-for repo in scripts goapp webapps; do
+for repo in scripts goapp webapp; do
     if [ ! -d $repo ]; then
 	    git clone https://github.com/ibm-dojo/$repo.git
     else
