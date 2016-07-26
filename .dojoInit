@@ -1,1 +1,1 @@
-curl -s https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep | sh
+curl -s https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep | bash

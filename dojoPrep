@@ -20,7 +20,7 @@ pushd $HOME
 
 for repo in scripts goapp webapps; do
     if [ ! -d $repo ]; then
-	    git clone https://github.com/ibm-dojo/repo.git
+	    git clone https://github.com/ibm-dojo/$repo.git
     else
 	    cd $repo
 	    git pull
