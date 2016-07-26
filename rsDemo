@@ -2,13 +2,15 @@
 
 source funcs
 
-(kubectl delete -f rs.yaml ; kubectl delete rs httpd-rs) &> /dev/null
+dir=$(dirname "$0")
+
+(kubectl delete -f $dir/rs.yaml ; kubectl delete rs httpd-rs) &> /dev/null
 wait ! kubectl get rs httpd-rs
 
 set -e
 
-doit cat rs.yaml
-doit kubectl create -f rs.yaml
+doit cat $dir/rs.yaml
+doit kubectl create -f $dir/rs.yaml
 doit kubectl get rs
 doit kubectl get pods
 
@@ -27,7 +29,7 @@ wait kubectl describe rs httpd-rs \| grep \"2 Running\"
 
 doit kubectl describe rs httpd-rs
 
-doit kubectl delete -f rs.yaml
+doit kubectl delete -f $dir/rs.yaml
 wait ! kubectl get rs httpd-rs
 
 doit kubectl get rs
