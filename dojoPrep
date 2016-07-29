@@ -2,8 +2,10 @@
 
 set -ex
 
+# Get/refresh some images we'll use during the Dojo
+###################################################
 docker pull ubuntu:14.04
-docker tag ubuntu:14.04 ubuntu
+docker tag -f ubuntu:14.04 ubuntu
 docker pull tomcat
 docker pull nginx
 docker pull golang
@@ -16,6 +18,8 @@ export K8S_VERSION=$(curl -sS https://storage.googleapis.com/kubernetes-release/
 
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
+# Clone (or update)  some repos we'll need
+##########################################
 pushd $HOME
 
 for repo in scripts goapp webapp; do
@@ -29,3 +33,13 @@ for repo in scripts goapp webapp; do
 done
 
 popd
+
+# Make sure our env is updated
+##############################
+if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
+	echo 'set -o vi' >> .bashrc
+fi
+
+if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
+	echo 'PATH=$PATH:$HOME/scripts' >> .bashrc
+fi

@@ -1,2 +1,0 @@
-set -ex
-curl -s https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep | bash
