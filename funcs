@@ -1,13 +1,34 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
+delay="0.05"
+skip="$SKIP"
+
+function slowType() {
+	str="$*"
+	for i in `seq 0 ${#str}`; do
+		echo -n $bold${str:$i:1}$normal
+		sleep $delay
+	done
+}
+
+function readChar() {
+	read -s -n 1 ch
+	if [[ "$ch" == "f" ]]; then
+		delay="0"
+	elif [[ "$ch" == "s" ]]; then
+		delay="0.05"
+	elif [[ "$ch" == "r" ]]; then
+		skip="x"
+	fi
+}
 
 function doit() {
 	set +e
 	echo -n $bold"$"$normal" "
-	if [[ "$SKIP" == "" ]]; then read -s -n 1 ; fi
-	echo -n $bold$*$normal" "
+	if [[ "$skip" == "" ]]; then readChar ; fi
+	slowType $*
 	echo "$*" >> cmds
-	if [[ "$SKIP" == "" ]]; then read -s -n 1 ; fi
+	if [[ "$skip" == "" ]]; then readChar ; fi
 	echo
 
 	#if [[ "$MORE" == "" ]]; then
