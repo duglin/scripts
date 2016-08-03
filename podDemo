@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source funcs
-
 dir=$(dirname "$0")
 
 (kubectl delete -f $dir/pod.yaml ; kubectl delete pod httpd-pod) &> /dev/null

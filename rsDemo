@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source funcs
-
 dir=$(dirname "$0")
 
 (kubectl delete -f $dir/rs.yaml ; kubectl delete rs httpd-rs) &> /dev/null
