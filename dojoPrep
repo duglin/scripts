@@ -5,7 +5,7 @@ set -ex
 # Get/refresh some images we'll use during the Dojo
 ###################################################
 docker pull ubuntu:14.04
-docker tag -f ubuntu:14.04 ubuntu
+docker tag ubuntu:14.04 ubuntu
 docker pull tomcat
 docker pull nginx
 docker pull golang
@@ -14,8 +14,8 @@ docker pull ibmdojo/tiny
 docker pull ibmdojo/httpd
 docker pull ibmdojo/dind
 
-export K8S_VERSION=$(curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-
+# curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
+export K8S_VERSION=v1.3.4
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
 # Clone (or update)  some repos we'll need

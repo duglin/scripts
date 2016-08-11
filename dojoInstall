@@ -1,3 +1,28 @@
+# To build a Docker Dojo VM
+# - download the Ubuntu Desktop image - e.g. ubuntu-16.04.1-desktop-amd64.iso
+# - create a Vbox VM:
+#   - 2 gig memory
+#   - 2 CPU
+#   - 20 gig disk
+#   - attach ISO
+# - during install of Ubuntu
+#   - select "Download updates while installing Ubuntu"
+#   - Erase disk and install Ubuntu
+#   - Name: docker
+#   - Computer Name: docker
+#   - username: user
+#   - password: docker
+#   - select: log in automatically
+#
+# Then run the VM:
+# - Remove extra icons from the launch bar
+# - Add terminal to launch bar
+# - Enable copy-n-paste
+# - Insert the Guest Additions CD, run, eject
+# - Reboot
+# - Run:
+#     curl -s https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoInstall | bash
+
 set -ex
 
 user="user"
@@ -18,8 +43,16 @@ if ! which docker > /dev/null ; then
     docker version
 fi
 
-# Install the desired version of Docker - manually
-##################################################
+# Install the desired version of Docker
+#######################################
+sudo service docker stop
+dockerVersion=1.12.0
+dockerDir=$(dirname `which docker`)
+sudo mkdir ${dockerDir}/saved.docker
+sudo mv ${dockerDir}/docker* ${dockerDir}/saved.docker/
+curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
+	sudo tar -C ${dockerDir} --strip-components=1 -xvzf-
+sudo service docker start
 
 # Run the Dojo setup script
 ###########################
