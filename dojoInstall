@@ -38,6 +38,7 @@ sudo apt-get install -y curl
 if ! which docker > /dev/null ; then
     sudo curl -fsSL https://get.docker.com/ | sh
     sudo usermod -aG docker $user
+	newgrp docker
 
 	# verify
     docker version
@@ -55,12 +56,11 @@ curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
 sudo service docker start
 
 # Run the Dojo setup script
-# Have to 'sudo -u user' to pick up the new group perms
 #######################################################
 if ! which dojoPrep > /dev/null; then
     curl -s \
-	  https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep | 
-	  sudo -i -u user bash
+	  https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep |  \
+	  bash
 else
-	sudo -i -u user dojoPrep
+	dojoPrep
 fi
