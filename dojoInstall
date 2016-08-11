@@ -55,11 +55,12 @@ curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
 sudo service docker start
 
 # Run the Dojo setup script
-###########################
+# Have to 'sudo -u user' to pick up the new group perms
+#######################################################
 if ! which dojoPrep > /dev/null; then
     curl -s \
 	  https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep | 
-	  bash
+	  sudo -u user bash
 else
-	dojoPrep
+	sudo -u user dojoPrep
 fi
