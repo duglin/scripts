@@ -60,7 +60,7 @@ sudo service docker start
 if ! which dojoPrep > /dev/null; then
     curl -s \
 	  https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep | 
-	  sudo -u user bash
+	  sudo -i -u user bash
 else
-	sudo -u user dojoPrep
+	sudo -i -u user dojoPrep
 fi
