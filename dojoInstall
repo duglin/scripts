@@ -17,8 +17,9 @@
 # Then run the VM:
 # - Remove extra icons from the launch bar
 # - Add terminal to launch bar
-# - Enable copy-n-paste
 # - Insert the Guest Additions CD, run, eject
+# - Enable copy-n-paste
+# - Go to "Software and updates", "Updates" tab, "Auto check for updates":Never
 # - Reboot
 # - Run:
 #     curl -s https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoInstall | bash
@@ -38,10 +39,9 @@ sudo apt-get install -y curl
 if ! which docker > /dev/null ; then
     sudo curl -fsSL https://get.docker.com/ | sh
     sudo usermod -aG docker $user
-	newgrp docker
 
 	# verify
-    docker version
+    sudo docker version
 fi
 
 # Install the desired version of Docker
@@ -60,7 +60,7 @@ sudo service docker start
 if ! which dojoPrep > /dev/null; then
     curl -s \
 	  https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep |  \
-	  bash
+	  sg docker -c bash
 else
-	dojoPrep
+	sg docker -c dojoPrep
 fi
