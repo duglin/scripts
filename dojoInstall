@@ -5,6 +5,7 @@
 #   - 2 CPU
 #   - 20 gig disk
 #   - attach ISO
+#   - Enable copy-n-paste
 # - during install of Ubuntu
 #   - select "Download updates while installing Ubuntu"
 #   - Erase disk and install Ubuntu
@@ -18,7 +19,6 @@
 # - Remove extra icons from the launch bar
 # - Add terminal to launch bar
 # - Insert the Guest Additions CD, run, eject
-# - Enable copy-n-paste
 # - Go to "Software and updates", "Updates" tab, "Auto check for updates":Never
 # - Reboot
 # - Run:
