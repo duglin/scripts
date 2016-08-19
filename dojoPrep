@@ -13,6 +13,11 @@ docker pull ibmdojo/looper
 docker pull ibmdojo/tiny
 docker pull ibmdojo/httpd
 docker pull ibmdojo/dind
+docker pull dockercloud/haproxy
+docker pull python:3-alpine
+docker pull redis:3-alpine
+
+
 
 # curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
 export K8S_VERSION=v1.3.4
@@ -41,5 +46,5 @@ if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
 fi
 
 if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
-	echo 'PATH=$PATH:$HOME/scripts' >> .bashrc
+        echo 'PATH=$PATH:$HOME/scripts' >> .bashrc
 fi
