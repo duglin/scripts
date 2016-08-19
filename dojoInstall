@@ -49,8 +49,12 @@ fi
 sudo service docker stop
 dockerVersion=1.12.0
 dockerDir=$(dirname `which docker`)
-sudo mkdir ${dockerDir}/saved.docker
-sudo mv ${dockerDir}/docker* ${dockerDir}/saved.docker/
+
+if ! -d ${dockerDir}/saved.docker; then
+	sudo mkdir ${dockerDir}/saved.docker
+	sudo mv ${dockerDir}/docker* ${dockerDir}/saved.docker/
+fi
+
 curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
 	sudo tar -C ${dockerDir} --strip-components=1 -xvzf-
 sudo service docker start
