@@ -1,0 +1,3 @@
+FROM scratch
+MAINTAINER me@here.com
+ENV foo=bar
