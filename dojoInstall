@@ -55,6 +55,10 @@ curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
 	sudo tar -C ${dockerDir} --strip-components=1 -xvzf-
 sudo service docker start
 
+# Install Compose
+#################
+curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+
 # Run the Dojo setup script
 #######################################################
 if ! which dojoPrep > /dev/null; then

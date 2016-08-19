@@ -15,6 +15,21 @@ function slowType() {
 	done
 }
 
+function slowTty() {
+	str="$*"
+	echo -n $bold >&3
+	if [[ "$delay" == "0" ]]; then
+		echo -n $str
+	else
+	    for i in `seq 0 ${#str}`; do
+		    echo -n "${str:$i:1}"
+		    sleep $delay
+	    done
+	fi
+	sleep 0.2  # just to give the other program time to show its input
+	echo -n $normal >&3
+}
+
 function readChar() {
 	read -s -n 1 ch
 	if [[ "$ch" == "f" ]]; then
@@ -26,13 +41,21 @@ function readChar() {
 	fi
 }
 
+function pause() {
+	if [[ "$skip" == "" ]]; then
+		readChar
+	else
+		sleep 0.2
+	fi
+}
+
 function doit() {
 	set +e
 	echo -n $bold"$"$normal" "
-	if [[ "$skip" == "" ]]; then readChar ; fi
+	pause
 	slowType $*
 	echo "$*" >> cmds
-	if [[ "$skip" == "" ]]; then readChar ; fi
+	pause
 	echo
 
 	#if [[ "$MORE" == "" ]]; then
@@ -47,9 +70,46 @@ function doit() {
 	rc=$?
 	# rc=${PIPESTATUS[0]}
 	cat out
-	[[ "$rc" == "0" ]] || exit
 	echo
+	[[ "$rc" == "0" ]] || exit
 	set -e
+}
+
+function ttyRun() {
+    echo -n $bold"$"$normal" "
+	pause
+    slowType "$*"
+	pause
+    echo
+
+    exec 3>&1
+	set +e
+    (
+		sleep 0.2
+        while read -u 10 line ; do
+			dontWait=""
+			if [[ "$line" == "@"* ]]; then
+				# Lines starting with "@" will be executed
+				# immediately w/o pausing before or after showing it
+				dontWait="x"
+				line=${line:1}
+			fi
+			if [[ "$dontWait" == "" ]]; then pause ; fi
+            slowTty $line
+			if [[ "$dontWait" == "" ]]; then pause ; fi
+            echo
+			sleep 0.2
+        done
+		pause
+		slowTty exit
+		pause
+        echo
+    ) | script -efq -c "$*"
+	rc=${PIPESTATUS[1]}
+	set -e
+	echo -n $normal
+	echo
+	[[ "$rc" == "0" ]] || exit
 }
 
 function comment() {
