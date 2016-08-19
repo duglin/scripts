@@ -52,7 +52,7 @@ sudo service docker stop
 dockerVersion=1.12.0
 dockerDir=$(dirname `which docker`)
 
-if ! -d ${dockerDir}/saved.docker; then
+if [ ! -d ${dockerDir}/saved.docker ]; then
 	sudo mkdir ${dockerDir}/saved.docker
 	sudo mv ${dockerDir}/docker* ${dockerDir}/saved.docker/
 fi
