@@ -1,0 +1,35 @@
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+     - 5000
+    volumes:
+     - .:/code
+    depends_on:
+     - redis
+    networks:
+      - frontend
+      - backend
+  lb:
+    image: dockercloud/haproxy
+    links:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+    networks:
+      - frontend
+  redis:
+    image: redis:3-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-vol:/data
+    networks:
+      - backend
+volumes:
+  redis-vol:
+networks:
+  frontend:
+  backend:

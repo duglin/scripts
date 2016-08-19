@@ -12,6 +12,11 @@ docker pull ibmdojo/looper
 docker pull ibmdojo/tiny
 docker pull ibmdojo/httpd
 docker pull ibmdojo/dind
+docker pull dockercloud/haproxy
+docker pull python:3-alpine
+docker pull redis:3-alpine
+
+
 
 docker tag ubuntu:14.04 ubuntu
 docker tag nginx unknown
@@ -46,7 +51,7 @@ if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
 fi
 
 if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
-	echo 'PATH=$PATH:$HOME/scripts' >> .bashrc
+        echo 'PATH=$PATH:$HOME/scripts' >> .bashrc
 fi
 
 rm -rf $HOME/tmp
