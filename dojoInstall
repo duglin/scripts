@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # To build a Docker Dojo VM
 # - download the Ubuntu Desktop image - e.g. ubuntu-16.04.1-desktop-amd64.iso
 # - create a Vbox VM:
