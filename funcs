@@ -1,6 +1,6 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
-delay="0.03"
+delay="0.01"
 skip="$SKIP"
 
 function slowType() {
@@ -19,7 +19,7 @@ function slowTty() {
 	str="$*"
 	echo -n $bold >&3
 	if [[ "$delay" == "0" ]]; then
-		echo -n $str
+		echo -n "$str"
 	else
 	    for i in `seq 0 ${#str}`; do
 		    echo -n "${str:$i:1}"
@@ -66,13 +66,21 @@ function doit() {
 	#    rc=${PIPESTATUS[0]}
 	#fi
 
-	sh -c " $* " &>  out
+	sh -c " $* " &> out
 	rc=$?
 	# rc=${PIPESTATUS[0]}
 	cat out
 	echo
 	[[ "$rc" == "0" ]] || exit
 	set -e
+}
+
+function background() {
+	echo -n $bold"$"$normal" "
+	slowType $*
+	echo "$*" >> cmds
+	echo
+	sh -c " $* " &
 }
 
 function ttyRun() {
@@ -88,6 +96,11 @@ function ttyRun() {
 		sleep 0.2
         while read -u 10 line ; do
 			dontWait=""
+			if [[ "$line" == "run "* ]]; then
+				line=${line:4}
+				${line}
+				continue
+			fi
 			if [[ "$line" == "@"* ]]; then
 				# Lines starting with "@" will be executed
 				# immediately w/o pausing before or after showing it
@@ -106,6 +119,7 @@ function ttyRun() {
         echo
     ) | script -efq -c "$*"
 	rc=${PIPESTATUS[1]}
+	rm -f typescript
 	set -e
 	echo -n $normal
 	echo
