@@ -63,7 +63,7 @@ doit docker ps -a
 
 doit docker run -d ubuntu sleep 6000
 ID=$(cat out) ; ID=${ID:0:3}
-doit ! docker rm $ID
+doit --ignorerc docker rm $ID
 doit docker rm -f $ID
 
 doit docker rm -f $(docker ps -aq)
@@ -93,7 +93,7 @@ ID=$(cat out) ; ID=${ID:0:3}
 sleep 3
 doit docker logs $ID
 
-ttyDoit ! docker stats 10<<EOF
+ttyDoit --ignorerc docker stats 10<<EOF
   run sleep 5 
   
 EOF
@@ -151,7 +151,7 @@ doit docker run -d -p 8080:80 ubuntu sleep 600
 ID=$(cat out) ; ID=${ID:0:3}
 doit docker port $ID
 doit docker port $ID 80
-doit ! docker port $ID 81
+doit --ignorerc docker port $ID 81
 
 echo All done
 

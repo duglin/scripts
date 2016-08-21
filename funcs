@@ -50,6 +50,17 @@ function pause() {
 }
 
 function doit() {
+	local ignorerc=""
+
+	while [[ "$1" == "--"* ]]; do
+		opt="$1"
+		shift
+
+		if [[ "$opt" == "--ignorerc" ]]; then
+			ignorerc="1"
+		fi
+	done
+
 	set +e
 	echo -n $bold"$"$normal" "
 	pause
@@ -58,20 +69,11 @@ function doit() {
 	pause
 	echo
 
-	#if [[ "$MORE" == "" ]]; then
-	#    sh -c " $* " 2>&1 | tee out
-	#    rc=${PIPESTATUS[0]}
-	#else
-	#    sh -c " $* " 2>&1 | more | tee out 
-	#    rc=${PIPESTATUS[0]}
-	#fi
-
 	sh -c " $* " &> out
 	rc=$?
-	# rc=${PIPESTATUS[0]}
 	cat out
 	echo
-	[[ "$rc" == "0" ]] || exit
+	[[ "$ignorerc" == "" && "$rc" != "0" ]] && echo "Non-zero exit code" && exit
 	set -e
 }
 
@@ -84,6 +86,17 @@ function background() {
 }
 
 function ttyDoit() {
+	local ignorerc=""
+
+	while [[ "$1" == "--"* ]]; do
+		opt="$1"
+		shift
+
+		if [[ "$opt" == "--ignorerc" ]]; then
+			ignorerc="1"
+		fi
+	done
+
     echo -n $bold"$"$normal" "
 	pause
     slowType "$*"
@@ -116,16 +129,17 @@ function ttyDoit() {
         echo
     ) | script -efq -a /dev/null -c "$*"
 	rc=${PIPESTATUS[1]}
-	set -e
 	echo -n $normal
 	echo
-	[[ "$rc" == "0" ]] || exit
+	[[ "$ignorerc" == "" && "$rc" != "0" ]] && echo "Non-zero exit code" && exit
+	set -e
 }
 
 function comment() {
 	echo -e $bold$*\\n$normal
 }
 
+# Wait until the passed in cmd returns true
 function wait() {
 	# set -x
 	if [ $1 == "!" ]; then
