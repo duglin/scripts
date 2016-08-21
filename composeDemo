@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source ../funcs
+source funcs
+dir=$(dirname "$0")
+
+pushd $dir/compose > /dev/null
 
 doit docker-compose up -d
 
@@ -14,3 +17,6 @@ echo "The current directory is mounted and automatically refreshed by flask. Edi
 
 doit docker-compose down
 
+rm -f cmds out
+
+popd > /dev/null

@@ -16,6 +16,7 @@ doit cat new
 doit docker build -t newimage -f new .
 doit docker history newimage
 doit cd ..
+rm cmds out
 popd > /dev/null
 
 doit docker tag newimage hi
