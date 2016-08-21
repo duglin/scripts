@@ -1,6 +1,6 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
-delay="0.01"
+delay="0"
 skip="$SKIP"
 
 function slowType() {
@@ -83,7 +83,7 @@ function background() {
 	sh -c " $* " &
 }
 
-function ttyRun() {
+function ttyDoit() {
     echo -n $bold"$"$normal" "
 	pause
     slowType "$*"
@@ -113,13 +113,9 @@ function ttyRun() {
             echo
 			sleep 0.2
         done
-		pause
-		slowTty exit
-		pause
         echo
-    ) | script -efq -c "$*"
+    ) | script -efq -a /dev/null -c "$*"
 	rc=${PIPESTATUS[1]}
-	rm -f typescript
 	set -e
 	echo -n $normal
 	echo

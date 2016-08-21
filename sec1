@@ -12,8 +12,9 @@ doit docker version
 doit docker run ubuntu echo Hello World
 
 doit docker run ubuntu ps -ef
-ttyRun docker run -ti ubuntu bash 10<<EOF
+ttyDoit docker run -ti ubuntu bash 10<<EOF
   pwd
+  exit
 EOF
 
 doit docker run -d --name zzz ubuntu sleep 6000
@@ -23,17 +24,18 @@ doit docker inspect --format "{{.NetworkSettings.IPAddress}}" zzz
 
 doit docker exec zzz ps -ef
 
-ttyRun docker exec -ti zzz bash 10<<EOF
+ttyDoit docker exec -ti zzz bash 10<<EOF
   pwd
   ps -ef
   ls
+  exit
 EOF
 
 doit docker top zzz
 doit ps -ef \| grep sleep
 
 doit docker run -d unknown
-ID=$(cat out)
+ID=$(cat out) ; ID=${ID:0:3}
 doit docker top $ID
 doit docker exec $ID ps -ef
 doit docker exec $ID cat /etc/os-release
@@ -60,22 +62,22 @@ doit docker rm zzz $ID
 doit docker ps -a
 
 doit docker run -d ubuntu sleep 6000
-ID=$(cat out)
+ID=$(cat out) ; ID=${ID:0:3}
 doit ! docker rm $ID
 doit docker rm -f $ID
 
 doit docker rm -f $(docker ps -aq)
 
 doit docker run -tid ibmdojo/looper
-ID=$(cat out)
-ttyRun  docker attach --detach-keys ctrl-p $ID 10<<EOF
-run sleep 3
-
+ID=$(cat out) ; ID=${ID:0:3}
+ttyDoit  docker attach --detach-keys ctrl-p $ID 10<<EOF
+  run sleep 3
+  
 EOF
 doit docker ps
-ttyRun docker attach --detach-keys a $ID 10<<EOF
-run sleep 3
-a
+ttyDoit docker attach --detach-keys a $ID 10<<EOF
+  run sleep 3
+  a
 EOF
 
 doit docker run --help
@@ -87,13 +89,13 @@ doit docker run -e myEnv=myValue ubuntu env
 doit docker run -w /usr ubuntu bash -c 'pwd && ls -C'
 
 doit docker run -d ibmdojo/looper
-ID=$(cat out)
+ID=$(cat out) ; ID=${ID:0:3}
 sleep 3
 doit docker logs $ID
 
-ttyRun ! docker stats 10<<EOF
-run sleep 5 
-
+ttyDoit ! docker stats 10<<EOF
+  run sleep 5 
+  
 EOF
 doit docker rm -f $ID
 
@@ -102,7 +104,7 @@ doit docker diff scary
 doit docker rm scary
 
 doit docker run -d ibmdojo/tiny
-ID=$(cat out)
+ID=$(cat out) ; ID=${ID:0:3}
 doit docker cp $ID:/hello .
 doit ls -l hello
 doit docker rm -f $ID
@@ -111,9 +113,10 @@ doit date \> foo
 doit docker run -tid --name test ubuntu bash
 doit docker cp foo test:/tmp/
 doit docker exec test ls -l /tmp
-ttyRun docker attach test 10<<EOF
+ttyDoit docker attach test 10<<EOF
 
-ls -l /tmp
+  ls -l /tmp
+  exit
 EOF
 doit docker rm -f test
 doit rm foo
@@ -139,18 +142,17 @@ doit docker events --since 5m --until 0s
 doit docker info
 
 doit docker run -dP nginx
-ID=$(cat out)
+ID=$(cat out) ; ID=${ID:0:3}
 doit docker ps
 port=$(grep tcp out | sed "s/.*:\([^-]*\)-.80.*/\1/")
 doit curl http://localhost:$port
 
 doit docker run -d -p 8080:80 ubuntu sleep 600
-ID=$(cat out)
-ID=${ID:0:3}
+ID=$(cat out) ; ID=${ID:0:3}
 doit docker port $ID
 doit docker port $ID 80
 doit ! docker port $ID 81
 
 echo All done
 
-rm -f cmds out hello
+rm -f cmds out

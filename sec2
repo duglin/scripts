@@ -1,0 +1,91 @@
+#!/bin/bash
+
+source funcs
+dir=$(dirname "$0")
+
+(docker rm -f `docker ps -aq` >& /dev/null )
+
+set -e
+
+doit cd layers
+pushd layers > /dev/null
+doit cat base
+doit docker build -t baseimage -f base .
+doit docker history baseimage
+doit cat new
+doit docker build -t newimage -f new .
+doit docker history newimage
+doit cd ..
+popd > /dev/null
+
+doit docker tag newimage hi
+doit docker tag hi myhi:1.0
+doit docker tag hi ibmcom/myhi
+doit docker tag hi hub.docker.com/ibmcom/myhi
+
+doit docker images
+
+doit docker rmi myhi:1.0
+doit docker images
+doit docker rmi hi newimage hub.docker.com/ibmcom/myhi
+doit docker rmi ibmcom/myhi
+
+doit docker inspect ibmdojo/looper
+
+doit docker create ubuntu /hello
+ID=$(cat out) ; ID=${ID:0:3}
+doit docker cp hello $ID:/
+doit docker commit $ID myhello
+doit docker run myhello
+
+doit cd tmp
+pushd tmp
+
+cat > Dockerfile <<EOF
+  FROM ubuntu
+  RUN echo install some stuff
+  CMD echo Hello World
+EOF
+doit cat Dockerfile
+doit docker build -t hi .
+doit docker run hi
+
+doit docker history ubuntu
+doit docker history hi
+
+cat > Dockerfile <<EOF
+  FROM ubuntu
+  RUN env
+  ARG foo=bar
+  RUN env
+EOF
+doit cat Dockerfile
+doit docker build -t argdemo .
+doit docker run argdemo env
+doit docker build -t argdemo --build-arg foo=zzz .
+
+cat > Dockerfile <<EOF
+  FROM ubuntu
+  COPY Dockerfile /tmp/
+  RUN ls -l /tmp/
+EOF
+doit cat Dockerfile
+doit docker build .
+ID=$(grep built out | sed "s/.*built //")
+doit docker run $ID ls -l /tmp/
+
+cat  > Dockefrile <<EOF
+  FROM ubuntu
+  CMD echo Hello World
+EOF
+doit docker build -t demo .
+doit docker run demo
+
+cat  > Dockerfile <<EOF
+  FROM ubuntu
+  ENTRYPOINT [ "echo", "Hello World" ]
+  CMD [ "again" ]
+EOF
+doit docker build -t demo .
+doit docker run demo
+doit docker run demo bye
