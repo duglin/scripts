@@ -5,6 +5,7 @@ set -ex
 # Get/refresh some images we'll use during the Dojo
 ###################################################
 docker pull ubuntu:14.04
+docker pull alpine
 docker pull tomcat
 docker pull nginx
 docker pull golang
@@ -15,8 +16,6 @@ docker pull ibmdojo/dind
 docker pull dockercloud/haproxy
 docker pull python:3-alpine
 docker pull redis:3-alpine
-
-
 
 docker tag ubuntu:14.04 ubuntu
 docker tag nginx unknown
