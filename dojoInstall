@@ -119,7 +119,11 @@ if ! grep "alias git" ~/.bashrc > /dev/null ; then
 fi
 
 if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
-        echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
+	echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
+fi
+
+if ! grep "the password" ~/.bashrc > /dev/null ; then
+	echo echo If ever prompted, the password is \'docker\' >> ~/.bashrc
 fi
 
 function git(){
