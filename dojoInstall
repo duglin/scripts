@@ -25,6 +25,7 @@
 # - Reboot
 # - Run:
 #     curl -s https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoInstall | bash
+# - Reboot
 
 set -ex
 
@@ -52,7 +53,7 @@ fi
 # Install the desired version of Docker
 #######################################
 dockerVersion=${DOCKER_VERSION:-1.12.0}
-tmpVer=`docker version | grep Version | head -1 | sed "s/.*: *\([^ ]*\)/\1/"`
+tmpVer=`sudo docker version | grep Version | head -1 | sed "s/.*: *\([^ ]*\)/\1/"`
 
 if [[ "$tmpVer" != "$dockerVersion" ]]; then
 	dockerDir=$(dirname `which docker`)
@@ -113,7 +114,7 @@ if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
 fi
 
 if ! grep "alias git" ~/.bashrc > /dev/null ; then
-	echo alias git=\'docker run -ti -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git\' >> ~/.bashrc
+	echo alias git=\'docker run -ti -u 1000:1000 -v /home/user:/tmphome -v \$PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git\' >> ~/.bashrc
 
 fi
 
