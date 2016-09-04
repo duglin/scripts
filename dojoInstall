@@ -32,8 +32,11 @@ user="user"
 
 # Update OS stuff
 #################
-sudo apt-get update
-sudo apt-get -y upgrade
+if [[ ! -f ~/.upgraded || "$UPGRADE_OS" != "" ]]; then
+	sudo apt-get update
+	sudo apt-get -y upgrade
+	echo > ~/.upgraded
+fi
 sudo apt-get install -y curl
 
 # Install Docker
@@ -48,31 +51,98 @@ fi
 
 # Install the desired version of Docker
 #######################################
-sudo service docker stop
-dockerVersion=1.12.0
-dockerDir=$(dirname `which docker`)
+dockerVersion=${DOCKER_VERSION:-1.12.0}
+tmpVer=`docker version | grep Version | head -1 | sed "s/.*: *\([^ ]*\)/\1/"`
 
-if [ ! -d ${dockerDir}/saved.docker ]; then
+if [[ "$tmpVer" != "$dockerVersion" ]]; then
+	dockerDir=$(dirname `which docker`)
+	sudo service docker stop
+	rm -rf ${dockerDir}/saved.docker
 	sudo mkdir ${dockerDir}/saved.docker
 	sudo mv ${dockerDir}/docker* ${dockerDir}/saved.docker/
+    
+    curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
+	    sudo tar -C ${dockerDir} --strip-components=1 -xvzf-
+    sudo service docker start
 fi
-
-curl -s https://get.docker.com/builds/Linux/x86_64/docker-$dockerVersion.tgz | \
-	sudo tar -C ${dockerDir} --strip-components=1 -xvzf-
-sudo service docker start
 
 # Install Compose
 #################
-curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /tmp/docker-compose
-sudo mv /tmp/docker-compose /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+composeVersion=${COMPOSE_VERSION:-1.8.0}
+tmpVer=`docker-compose version | grep "compose version" | sed "s/.*version \([^, ]*\).*/\1/"`
+if [[ "$tmpVer" != "$composeVersion" ]]; then
+	curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /tmp/docker-compose
+	sudo mv /tmp/docker-compose /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+fi
 
 # Run the Dojo setup script
 #######################################################
-if ! which dojoPrep > /dev/null; then
-    curl -s \
-	  https://raw.githubusercontent.com/ibm-dojo/scripts/master/dojoPrep |  \
-	  sg docker -c bash
-else
-	sg docker -c dojoPrep
+sg docker -c bash <<'EOF'
+
+set -ex
+pushd $HOME
+
+# Get/refresh some images we'll use during the Dojo
+###################################################
+docker pull ubuntu:14.04
+docker pull alpine
+docker pull tomcat
+docker pull nginx
+docker pull golang
+docker pull ibmdojo/looper
+docker pull ibmdojo/tiny
+docker pull ibmdojo/httpd
+docker pull ibmdojo/dind
+docker pull ibmdojo/git
+docker pull dockercloud/haproxy
+docker pull python:3-alpine
+docker pull redis:3-alpine
+
+docker tag ubuntu:14.04 ubuntu
+docker tag nginx unknown
+
+# curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
+export K8S_VERSION=v1.3.4
+docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
+
+# Make sure our env is updated
+##############################
+if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
+	echo 'set -o vi' >> ~/.bashrc
 fi
+
+if ! grep "alias git" ~/.bashrc > /dev/null ; then
+	echo alias git=\'docker run -ti -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git\' >> ~/.bashrc
+
+fi
+
+if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
+        echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
+fi
+
+function git(){
+  docker run -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git $*
+}
+
+# Clone (or update) some repos we'll need
+#########################################
+for repo in scripts myapp goapp webapp; do
+    if [ ! -d $repo ]; then
+	    git clone https://github.com/ibm-dojo/$repo.git
+    else
+	    cd $repo
+	    git pull
+	    cd ..
+    fi
+done
+
+rm -rf $HOME/layers
+cp -r $HOME/scripts/layers $HOME/
+
+rm -rf $HOME/tmp
+mkdir $HOME/tmp
+
+popd
+
+EOF
