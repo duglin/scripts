@@ -18,7 +18,10 @@ doit docker run --privileged -dti --name node2 --hostname node2 ibmdojo/dind
 doit docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node2
 node2IP=$(docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node2)
 
-doit docker exec -ti node1 docker swarm join $token $joinIP
+ttyDoit docker exec -ti node1 sh 10<<EOF
+docker swarm join $token $joinIP
+EOF
+
 doit docker exec -ti node2 docker swarm join $token $joinIP
 
 doit docker service create --name mini -p 80:80 ibmdojo/mini
