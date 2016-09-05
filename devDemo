@@ -5,13 +5,14 @@ source $dir/funcs
 PATH=$(readlink -f $dir):$PATH
 
 (
-rm -f myapp
+echo
 )&>/dev/null
 
 set -e
 
-doit --ignorerc cd $HOME/myapp
-cd $HOME/myapp
+doit --ignorerc cd $dir/../myapp
+cd $dir/../myapp
+rm -f myapp
 doit cat Makefile
 
 doit --ignorerc make
@@ -33,4 +34,4 @@ doit make -f .Makefile1
 doit ls -l
 
 doit --ignorerc which git
-doit command -V git
+# doit alias git
