@@ -30,6 +30,8 @@
 set -ex
 
 user="user"
+dockerVersion=${DOCKER_VERSION:-1.12.0}
+composeVersion=${COMPOSE_VERSION:-1.8.0}
 
 # Update OS stuff
 #################
@@ -52,7 +54,6 @@ fi
 
 # Install the desired version of Docker
 #######################################
-dockerVersion=${DOCKER_VERSION:-1.12.0}
 tmpVer=`sudo docker version | grep Version | head -1 | sed "s/.*: *\([^ ]*\)/\1/"`
 
 if [[ "$tmpVer" != "$dockerVersion" ]]; then
@@ -69,7 +70,6 @@ fi
 
 # Install Compose
 #################
-composeVersion=${COMPOSE_VERSION:-1.8.0}
 tmpVer=`docker-compose version | grep "compose version" | sed "s/.*version \([^, ]*\).*/\1/"`
 if [[ "$tmpVer" != "$composeVersion" ]]; then
 	curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /tmp/docker-compose
@@ -87,6 +87,7 @@ pushd $HOME
 # Get/refresh some images we'll use during the Dojo
 ###################################################
 docker pull ubuntu:14.04
+docker pull registry
 docker pull alpine
 docker pull tomcat
 docker pull nginx
