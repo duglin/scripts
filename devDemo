@@ -19,7 +19,7 @@ doit --ignorerc make
 rm -f myapp
 doit make -f .Makefile
 
-background ./myapp
+background sudo ./myapp
 
 sleep 1
 
