@@ -22,13 +22,15 @@ doit make -f .Makefile
 background sudo ./myapp
 
 sleep 1
+echo
 
-doit curl localhost:80
-doit --ignorerc curl localhost:80/stop
+doit curl --silent localhost:80
+doit --ignorerc curl --silent localhost:80/stop
 
 doit ls -l
 rm -f myapp
 doit make -f .Makefile1
+doit ls -l
 
-doit which git
-doit alias git
+doit --ignorerc which git
+doit --ignorerc alias git
