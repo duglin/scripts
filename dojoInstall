@@ -123,8 +123,8 @@ if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
 	echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
 fi
 
-if ! grep "the password" ~/.profile > /dev/null ; then
-	echo "echo If ever prompted, the password is \\'docker\\'" >> ~/.profile
+if ! grep "the password" ~/.bashrc > /dev/null ; then
+	echo "echo If ever prompted, the password is \\'docker\\'" >> ~/.bashrc
 fi
 
 function git(){
