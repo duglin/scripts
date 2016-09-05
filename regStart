@@ -6,7 +6,7 @@ fi
 
 if docker inspect --type container registry &> /dev/null ; then
 	echo The registry is already running. Use \'regStop\' to stop it.
-	exit 1
+	exit 0
 fi
 
 docker run --name registry -d -p 5000:5000 -v $HOME/registry:/var/lib/registry registry

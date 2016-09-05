@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source funcs
+dir=$(dirname "$0")
+
+set -e
+
+doit docker service rm myapp
+doit docker rm -f node1 node2 node3
+doit docker swarm leave --force
+rm node3.cmd

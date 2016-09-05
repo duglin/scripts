@@ -136,7 +136,7 @@ function ttyDoit() {
 }
 
 function comment() {
-	echo -e $bold$*\\n$normal
+	echo -e $bold\# $*\\n$normal
 }
 
 # Wait until the passed in cmd returns true
