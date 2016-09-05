@@ -33,4 +33,4 @@ doit make -f .Makefile1
 doit ls -l
 
 doit --ignorerc which git
-doit --ignorerc alias git
+doit command -V git
