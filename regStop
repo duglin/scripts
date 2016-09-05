@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if docker inspect --type container registry &> /dev/null ; then
+	docker rm -f registry
+fi
