@@ -1,12 +1,15 @@
 #!/bin/bash
 
+set -e
+
 if [ ! -d $HOME/registry ]; then
 	mkdir $HOME/registry
 fi
 
-if docker inspect --type container registry &> /dev/null ; then
+if [[ $(docker inspect --format "{{.State.Status}}" registry 2>/dev/null) == "running" ]]; then
 	echo The registry is already running. Use \'regStop\' to stop it.
 	exit 0
 fi
 
+docker rm -f registry &> /dev/null || echo -n
 docker run --name registry -d -p 5000:5000 -v $HOME/registry:/var/lib/registry registry
