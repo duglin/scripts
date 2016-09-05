@@ -1,0 +1,52 @@
+#!/bin/bash
+
+dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
+
+(
+echo
+)&>/dev/null
+
+set -e
+
+cd $dir/../myapp
+
+doit docker create ubuntu
+ID=$(cat out) ; ID=${ID:0:3}
+doit docker cp myapp $ID:/myapp
+doit docker commit -c \"entrypoint /myapp\" $ID myapp
+
+background docker run myapp
+sleep 1
+echo
+IP=$(docker inspect --format \"{{.NetworkSettings.Networks.bridge.IPAddress}}\" $(docker ps -aq -n=1))
+sleep 1
+doit curl --silent $IP
+docker rm -f $(docker ps -aq -n=1)
+
+doit docker run -d -ti -p 9999:80 myapp
+doit curl --silent localhost:9999
+doit --ignorerc docker rm $(docker ps -aq -n=1)
+doit docker rm -f $(docker ps -aq -n=1)
+
+doit cat Dockerfile
+
+doit docker build -t myapp .
+
+doit docker run -tidP myapp
+doit docker ps
+doit curl --silent localhost:$(docker port $(docker ps -aq -n=1) 80 | sed "s/.*://")
+doit docker rm -f $(docker ps -aq -n=1)
+
+doit regStart
+
+doit docker build -t docker:5000/myapp:1.0 .
+doit docker tag myapp docker:5000/myapp:1.0
+
+doit docker push docker:5000/myapp:1.0
+doit docker pull docker:5000/myapp:1.0
+
+doit docker images \| grep myapp
+doit docker build -f Dockerfile2 -t myapp .
+doit docker images \| grep myapp

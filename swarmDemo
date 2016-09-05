@@ -1,43 +1,33 @@
 #!/bin/bash
 
-source funcs
 dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
 
-(docker service rm $(docker service ls -q);docker exec -ti node1 docker swarm leave;docker exec -ti node2 docker swarm leave;docker swarm leave --force;docker rm -f node1 node2)&>/dev/null
+(
+docker service rm $(docker service ls -q)
+docker exec -ti node1 docker swarm leave
+docker exec -ti node2 docker swarm leave
+docker exec -ti node3 docker swarm leave
+docker swarm leave --force
+docker rm -f node1 node2 node3
+docker rm -f $(docker ps -aq)
+)&>/dev/null
 
 set -e
 
-doit docker swarm init
-joinIP=$(grep 2377 out | head -1)
-token=$(grep -e --token out | head -1 | sed "s/\\\\//")
+comment Running swarmDemo1
+swarmDemo1
 
-doit docker run --privileged -dti --name node1 --hostname node1 ibmdojo/dind
-doit docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node1
-node1IP=$(docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node1)
-doit docker run --privileged -dti --name node2 --hostname node2 ibmdojo/dind
-doit docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node2
-node2IP=$(docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node2)
+comment Running swarmDemo2
+swarmDemo2
 
-doit docker exec -ti node1 docker swarm join $token $joinIP
-doit docker exec -ti node2 docker swarm join $token $joinIP
+cd $dir/../myapp
+doit docker build -f Dockerfile3 -t docker:5000/myapp:2.0 .
+doit docker push docker:5000/myapp:2.0
 
-doit docker service create --name mini -p 80:80 ibmdojo/mini
+comment Running swarmDemo3
+swarmDemo3
 
-doit docker service ls
-echo -e $bold"Waiting for it to start...\\n"$normal
-while !(docker service ls|grep "1/1"&>/dev/null);do sleep 1;done
-
-doit curl --silent 127.0.0.1
-
-doit docker service scale mini=3
-echo -e $bold"Waiting for it to scale...\\n"$normal
-while !(docker service ls|grep "3/3");do sleep 1;done
-doit docker service ls
-
-doit curl --silent $node1IP
-doit curl --silent $node2IP
-
-doit docker service rm mini
-doit docker rm -f node1 node2
-doit docker swarm leave --force
-rm -f out err cmds
+comment Running swarmDemo9
+swarmDemo9

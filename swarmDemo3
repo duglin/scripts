@@ -1,7 +1,8 @@
 #!/bin/bash
 
-source funcs
 dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
 
 node3IP=$(docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" node3)
 

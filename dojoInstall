@@ -59,7 +59,7 @@ tmpVer=`sudo docker version | grep Version | head -1 | sed "s/.*: *\([^ ]*\)/\1/
 if [[ "$tmpVer" != "$dockerVersion" ]]; then
 	dockerDir=$(dirname `which docker`)
 	sudo service docker stop
-	rm -rf ${dockerDir}/saved.docker
+	sudo rm -rf ${dockerDir}/saved.docker
 	sudo mkdir ${dockerDir}/saved.docker
 	sudo mv ${dockerDir}/docker* ${dockerDir}/saved.docker/
     

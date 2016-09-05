@@ -1,7 +1,8 @@
 #!/bin/bash
 
-source funcs
 dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
 
 (
 docker service rm $(docker service ls -q)
@@ -31,6 +32,7 @@ doit --ignorerc curl --silent $node2IP
 
 comment Scale the app to have 3 instances
 doit docker service scale myapp=3
+doit docker service ls
 echo -e $bold"Waiting for it to scale...\\n"$normal
 while !(docker service ls|grep "3/3");do sleep 1;done
 doit docker service ls
@@ -42,7 +44,7 @@ node3IP=$(cat out)
 doit $(cat node3.cmd)
 
 comment Waiting for node 3 to pick up the networking info
-while !(curl --silent $node3); do sleep 1;done
+while !(curl --silent $node3IP); do sleep 1;done
 doit --ignorerc curl --silent $node3IP
 doit --ignorerc curl --silent $node3IP
 doit --ignorerc curl --silent $node3IP

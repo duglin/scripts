@@ -1,0 +1,33 @@
+#!/bin/bash
+
+dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
+
+(
+rm -f myapp
+)&>/dev/null
+
+set -e
+
+doit --ignorerc cd $HOME/myapp
+doit cat Makefile
+
+doit --ignorerc make
+
+rm -f myapp
+doit make -f .Makefile
+
+background ./myapp
+
+sleep 1
+
+doit curl localhost:80
+doit --ignorerc curl localhost:80/stop
+
+doit ls -l
+rm -f myapp
+doit make -f .Makefile1
+
+doit which git
+doit alias git
