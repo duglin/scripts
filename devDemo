@@ -11,6 +11,7 @@ rm -f myapp
 set -e
 
 doit --ignorerc cd $HOME/myapp
+cd $HOME/myapp
 doit cat Makefile
 
 doit --ignorerc make
