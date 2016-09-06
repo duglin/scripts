@@ -8,13 +8,14 @@ pushd $dir/compose > /dev/null
 
 doit docker-compose up -d
 
-echo "In another terminal, run 'watch -n1 -d curl 0.0.0.0'"
+echo "In another terminal, run 'watch -n1 -d curl -s localhost'"
 
 doit docker-compose scale web=3
 
 sleep 5
 
-echo "The current directory is mounted and automatically refreshed by flask. Edit 'app.py' for live reloads"
+comment "The current directory is mounted and automatically refreshed by flask."
+comment "Edit 'app.py' for live reloads"
 
 doit docker-compose down
 

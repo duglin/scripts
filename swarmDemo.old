@@ -28,15 +28,15 @@ doit docker service ls
 echo -e $bold"Waiting for it to start...\\n"$normal
 while !(docker service ls|grep "1/1"&>/dev/null);do sleep 1;done
 
-doit curl --silent 127.0.0.1
+doit curl -s 127.0.0.1
 
 doit docker service scale mini=3
 echo -e $bold"Waiting for it to scale...\\n"$normal
 while !(docker service ls|grep "3/3");do sleep 1;done
 doit docker service ls
 
-doit curl --silent $node1IP
-doit curl --silent $node2IP
+doit curl -s $node1IP
+doit curl -s $node2IP
 
 doit docker service rm mini
 doit docker rm -f node1 node2

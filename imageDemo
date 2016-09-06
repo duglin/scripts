@@ -22,11 +22,11 @@ sleep 1
 echo
 IP=$(docker inspect --format \"{{.NetworkSettings.Networks.bridge.IPAddress}}\" $(docker ps -aq -n=1))
 sleep 1
-doit curl --silent $IP
+doit curl -s $IP
 docker rm -f $(docker ps -aq -n=1)
 
 doit docker run -d -ti -p 9999:80 myapp
-doit curl --silent localhost:9999
+doit curl -s localhost:9999
 doit --ignorerc docker rm $(docker ps -aq -n=1)
 doit docker rm -f $(docker ps -aq -n=1)
 
@@ -36,7 +36,7 @@ doit docker build -t myapp .
 
 doit docker run -tidP myapp
 doit docker ps
-doit curl --silent localhost:$(docker port $(docker ps -aq -n=1) 80 | sed "s/.*://")
+doit curl -s localhost:$(docker port $(docker ps -aq -n=1) 80 | sed "s/.*://")
 doit docker rm -f $(docker ps -aq -n=1)
 
 doit regStart

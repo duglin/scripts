@@ -25,8 +25,8 @@ background sudo ./myapp
 sleep 1
 echo
 
-doit curl --silent localhost:80
-doit --ignorerc curl --silent localhost:80/stop
+doit curl -s localhost:80
+doit --ignorerc curl -s localhost:80/stop
 
 doit ls -l
 rm -f myapp
