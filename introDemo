@@ -1,0 +1,23 @@
+#!/bin/bash
+
+dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
+
+(
+echo
+)&>/dev/null
+
+set -e
+
+doit docker version
+
+doit docker run ubuntu echo Hello World
+
+ttyDoit docker run -ti ubuntu bash 10<<EOF
+  pwd
+  ls -l
+  whoami
+EOF
+
+doit docker run ubuntu ps -ef
