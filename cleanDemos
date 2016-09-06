@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd $HOME
-rm -f out cmds node3.cmd
+rm -f out cmds node3.cmd myapp/myapp myapp/out myapp/cmds
 docker rmi -f myapp &> /dev/null
 docker rmi -f docker:5000/myapp:1.0 &> /dev/null
 docker rmi -f docker:5000/myapp:2.0 &> /dev/null
