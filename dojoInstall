@@ -42,8 +42,7 @@ if [[ ! -f ~/.upgraded || "$UPGRADE_OS" != "" ]]; then
 fi
 sudo apt-get install -y curl
 
-rm -rf Desktop Documents Downloads Music Pictures Public Templates Videos
-rm -rf examples.desktop
+rm -rf Downloads Music Pictures Public Templates Videos
 
 # Install Docker
 ################
