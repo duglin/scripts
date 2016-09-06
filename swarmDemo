@@ -22,9 +22,10 @@ swarmDemo1
 comment Running swarmDemo2
 swarmDemo2
 
-cd $dir/../myapp
+pushd $(readlink -f $dir/../myapp) > /dev/null
 doit docker build -f Dockerfile3 -t docker:5000/myapp:2.0 .
 doit docker push docker:5000/myapp:2.0
+popd > /dev/null
 
 comment Running swarmDemo3
 swarmDemo3

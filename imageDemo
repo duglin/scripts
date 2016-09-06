@@ -10,7 +10,7 @@ echo
 
 set -e
 
-cd $dir/../myapp
+cd $(readlink -f $dir/../myapp)
 
 doit docker create ubuntu
 ID=$(cat out) ; ID=${ID:0:3}

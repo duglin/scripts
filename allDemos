@@ -10,3 +10,5 @@ kubeStart
 podDemo
 rsDemo
 kubeStop
+
+rm -f out cmds
