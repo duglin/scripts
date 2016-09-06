@@ -15,8 +15,8 @@ doit docker version
 doit docker run ubuntu echo Hello World
 
 ttyDoit docker run -ti ubuntu bash 10<<EOF
+  ps -ef
   pwd
-  ls -l
   whoami
 EOF
 

@@ -1,5 +1,12 @@
+#!/bin/bash
+set -e
+
 introDemo
 devDemo
 imageDemo
 swarmDemo
 composeDemo
+kubeStart
+podDemo
+rsDemo
+kubeStop

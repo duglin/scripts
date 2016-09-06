@@ -14,7 +14,7 @@ docker rm -f node1 node2
 
 set -e
 
-comment First, let's make sure the registry is running
+comment First, let\'s make sure the registry is running
 doit regStart
 
 comment First create our 2 containers/nodes
