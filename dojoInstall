@@ -107,7 +107,7 @@ docker tag ubuntu:14.04 ubuntu
 docker tag nginx unknown
 
 # curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
-export K8S_VERSION=v1.3.4
+export K8S_VERSION=v1.3.2
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
 # Make sure our env is updated

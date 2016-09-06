@@ -4,15 +4,21 @@ dir=$(dirname "$0")
 source $dir/funcs
 PATH=$(readlink -f $dir):$PATH
 
+set -e
+
 pushd $dir/compose > /dev/null
 
 doit docker-compose up -d
 
-echo "In another terminal, run 'watch -n1 -d curl -s localhost'"
+echo "In another terminal, run 'watch -n1 -d curl -s localhost:8080'"
 
 doit docker-compose scale web=3
 
 sleep 5
+
+doit curl -s localhost:8080
+doit curl -s localhost:8080
+doit curl -s localhost:8080
 
 comment "The current directory is mounted and automatically refreshed by flask."
 comment "Edit 'app.py' for live reloads"
