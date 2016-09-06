@@ -4,7 +4,11 @@ dir=$(dirname "$0")
 source $dir/funcs
 PATH=$(readlink -f $dir):$PATH
 
-(kubectl delete -f $dir/pod.yaml ; kubectl delete pod httpd-pod) &> /dev/null
+(
+kubectl delete -f $dir/pod.yaml
+kubectl delete pod httpd-pod
+) &> /dev/null
+
 wait ! kubectl get pod httpd-pod
 
 set -e
