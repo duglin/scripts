@@ -73,7 +73,7 @@ function doit() {
 	rc=$?
 	cat out
 	echo
-	[[ "$ignorerc" == "" && "$rc" != "0" ]] && echo "Non-zero exit code" && exit
+	[[ "$ignorerc" == "" && "$rc" != "0" ]] && echo "Non-zero exit code" && exit 1
 	set -e
 }
 
@@ -131,7 +131,7 @@ function ttyDoit() {
 	rc=${PIPESTATUS[1]}
 	echo -n $normal
 	echo
-	[[ "$ignorerc" == "" && "$rc" != "0" ]] && echo "Non-zero exit code" && exit
+	[[ "$ignorerc" == "" && "$rc" != "0" ]] && echo "Non-zero exit code" && exit 1
 	set -e
 }
 
