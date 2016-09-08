@@ -25,8 +25,8 @@ background ./myapp 8080
 sleep 1
 echo
 
-doit curl -s localhost:80
-doit --ignorerc curl -s localhost:80/stop
+doit curl -s localhost:8080
+doit --ignorerc curl -s localhost:8080/stop
 
 doit ls -l
 rm -f myapp
