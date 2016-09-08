@@ -1,0 +1,25 @@
+#!/bin/bash
+
+dir=$(dirname "$0")
+source $dir/funcs
+PATH=$(readlink -f $dir):$PATH
+
+(
+docker rm -f c1 c2
+docker volume rm myVol
+)&>/dev/null
+
+set -e
+
+doit docker volume create --name myVol
+doit docker run -dti --name c1 -v myVol:/data alpine sh
+doit docker run -dti --name c2 -v myVol:/data alpine sh
+
+doit docker exec c1 cp /etc/resolv.conf /data/file
+doit docker exec c2 cat /data/file
+
+doit docker rm -f c1 c2
+
+doit docker run --rm -v myVol:/zzz alpine cat /zzz/file
+
+doit docker volume rm myVol
