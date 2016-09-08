@@ -13,7 +13,7 @@ docker network rm net1
 set -e
 
 doit docker network create net1
-doit docker run -dti --net net1 --name myapp docker:5000/myapp
+doit docker run -dti --net net1 --name myapp docker:5000/myapp:1.0
 doit docker run -dti --name test alpine sh
 doit --ignorerc docker exec test ping -c 1 myapp
 doit docker network connect net1 test
