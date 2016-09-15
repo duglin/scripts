@@ -36,6 +36,7 @@ composeVersion=${COMPOSE_VERSION:-1.8.0}
 # Update OS stuff
 #################
 if [[ ! -f ~/.upgraded || "$UPGRADE_OS" != "" ]]; then
+	UPGRADE_OS=true
 	sudo apt-get update
 	sudo apt-get -y upgrade
 	echo > ~/.upgraded
@@ -153,5 +154,9 @@ rm -rf $HOME/tmp
 mkdir $HOME/tmp
 
 popd
+
+if [[ "$UPGRADE_OS" != "" ]]; then
+	sudo reboot
+fi
 
 EOF
