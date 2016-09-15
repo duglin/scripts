@@ -62,7 +62,7 @@ doit docker push docker:5000/myapp
 doit docker images \| grep myapp
 
 comment just to make sure the new image works
-doit docker run -tidP dokcer:5000/myapp:1.0
+doit docker run -tidP docker:5000/myapp:1.0
 ID=$(cat out) ; ID=${ID:0:3}
 sleep 1
 doit curl -s localhost:$(docker port $ID 80 | sed "s/.*://")
