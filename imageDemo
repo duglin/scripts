@@ -38,7 +38,7 @@ doit docker build -t myapp .
 doit docker run -tidP myapp
 ID=$(cat out) ; ID=${ID:0:3}
 doit docker ps
-doit curl -s localhost:$(docker port $D 80 | sed "s/.*://")
+doit curl -s localhost:$(docker port $ID 80 | sed "s/.*://")
 doit docker rm -f $ID
 
 doit regStart
