@@ -48,7 +48,7 @@ doit docker tag myapp docker:5000/myapp:1.0
 
 doit docker push docker:5000/myapp:1.0
 comment just to make sure the new image works
-doit docker run -tid docker:5000/myapp:1.0
+doit docker run -tidP docker:5000/myapp:1.0
 ID=$(cat out) ; ID=${ID:0:3}
 sleep 1
 doit curl -s localhost:$(docker port $ID 80 | sed "s/.*://")
@@ -61,8 +61,8 @@ doit docker build -f Dockerfile2 -t docker:5000/myapp .
 doit docker push docker:5000/myapp
 doit docker images \| grep myapp
 
-comment just make sure the new image works
-doit docker run -tid myapp:1.0
+comment just to make sure the new image works
+doit docker run -tidP myapp:1.0
 ID=$(cat out) ; ID=${ID:0:3}
 sleep 1
 doit curl -s localhost:$(docker port $ID 80 | sed "s/.*://")
