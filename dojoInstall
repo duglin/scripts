@@ -37,7 +37,7 @@ composeVersion=${COMPOSE_VERSION:-1.8.0}
 #################
 if [[ ! -f ~/.upgraded || "$UPGRADE_OS" != "" ]]; then
 	export UPGRADE_OS="true"
-	sudo apt-get update
+	echo docker | sudo -S apt-get update
 	sudo apt-get -y upgrade
 	echo > ~/.upgraded
 fi
