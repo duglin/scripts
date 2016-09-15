@@ -30,4 +30,5 @@ docker run \
 		--v=2
 
 while ! kubectl get pod &> /dev/null ; do sleep 1 ; done
+sleep 5
 echo Kubernetes is ready
