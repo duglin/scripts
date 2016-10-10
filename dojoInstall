@@ -30,8 +30,8 @@
 set -ex
 
 user="user"
-dockerVersion=${DOCKER_VERSION:-1.12.1}
-composeVersion=${COMPOSE_VERSION:-1.8.0}
+dockerVersion=${DOCKER_VERSION:-1.13.1}
+composeVersion=${COMPOSE_VERSION:-1.11.2}
 
 # Update OS stuff
 #################

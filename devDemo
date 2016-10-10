@@ -18,7 +18,7 @@ doit cat Makefile
 doit --ignorerc make
 
 rm -f myapp
-doit make -f .Makefile
+doit make -f Makefile1
 
 background ./myapp 8080
 
@@ -30,7 +30,7 @@ doit --ignorerc curl -s localhost:8080/stop
 
 doit ls -l
 rm -f myapp
-doit make -f .Makefile1
+doit make -f Makefile2
 doit ls -l
 
 doit --ignorerc which git

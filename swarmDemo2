@@ -24,10 +24,10 @@ while !(docker service ls|grep "1/1"&>/dev/null);do sleep 1;done
 comment Now verify that we can hit it using localhost
 doit --ignorerc curl -s 127.0.0.1
 
-comment Now see if we can hit by doing to node 1
+comment Now see if we can hit by going to node 1
 doit --ignorerc curl -s $node1IP
 
-comment Now see if we can hit by doing to node 2
+comment Now see if we can hit by going to node 2
 doit --ignorerc curl -s $node2IP
 
 comment Scale the app to have 3 instances
