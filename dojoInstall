@@ -29,19 +29,16 @@
 # UPDATE_OS=1                   : update Ubuntu
 # DOCKER_VERSION=...            : Docker version to install
 # COMPOSE_VERSION=...           : Docker Compose version to install
-# K8S_VERSION=...               : Kubernetes version of hyperkube
 
 (
 
-echo
-date
+echo && date
 
 set -ex
 
 user="user"
 dockerVersion=${DOCKER_VERSION:-1.13.1}
 composeVersion=${COMPOSE_VERSION:-1.11.2}
-K8S_VERSION=${K8S_VERSION:-v1.3.2}
 
 # If asked, update our git repo
 ###############################
@@ -52,7 +49,6 @@ if [[ "$UPDATE_SCRIPTS" != "" || "$*" == *"--update"* ]]; then
 	UPDATE_SCRIPTS="" \
 		DOCKER_VERSION=$dockerVersion \
 		COMPOSE_VERSION=$composeVersion \
-		K8S_VERSION=$K8S_VERSION \
 		dojoInstall --os
 	exit 0
 fi
@@ -132,6 +128,10 @@ docker pull redis:3-alpine
 docker tag ubuntu:14.04 ubuntu
 docker tag nginx unknown
 
+# note this needs to be in here since we're using "sg" and the env vars
+# from outside are not copied into this env
+K8S_VERSION=-v1.3.2
+# to get the latest version number, use:
 # curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
