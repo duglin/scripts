@@ -25,11 +25,11 @@
 # - Reboot
 
 # Options for this script:
-# UPGRADE_SCRIPTS=1              : refresh the 'scripts' git repo
-# UPGRADE_OS=1                   : upgrade Ubuntu
-# DOCKER_VERSION=...             : Docker version to install
-# COMPOSE_VERSION=...            : Docker Compose version to install
-# K8S_VERSION=...                : Kubernetes version of hyperkube
+# UPDATE_SCRIPTS=1 | --update   : refresh the 'scripts' git repo
+# UPDATE_OS=1                   : update Ubuntu
+# DOCKER_VERSION=...            : Docker version to install
+# COMPOSE_VERSION=...           : Docker Compose version to install
+# K8S_VERSION=...               : Kubernetes version of hyperkube
 
 set -ex
 
@@ -40,26 +40,25 @@ K8S_VERSION=${K8S_VERSION:-v1.3.2}
 
 # If asked, update our git repo
 ###############################
-if [[ "$UPGRADE_SCRIPTS" != "" ]]; then
+if [[ "$UPDATE_SCRIPTS" != "" || "$*" == *"--update"* ]]; then
 	cd ~/scripts
 	git pull
 	cd ..
-	UPGRADE_SCRIPTS="" \
+	UPDATE_SCRIPTS="" \
 		DOCKER_VERSION=$dockerVersion \
 		COMPOSE_VERSION=$composeVersion \
 		K8S_VERSION=$K8S_VERSION \
-		UPGRADE_OS=$UPGRADE_OS \
-		dojoInstall
+		dojoInstall --os
 	exit 0
 fi
 
 # Update OS stuff
 #################
-if [[ ! -f ~/.upgraded || "$UPGRADE_OS" != "" ]]; then
-	export UPGRADE_OS="true"
+if [[ ! -f ~/.updated || "$UPDATE_OS" != "" || "$*" == *"--os"* ]]; then
+	export UPDATE_OS="true"
 	echo docker | sudo -S apt-get update
 	sudo apt-get -y upgrade
-	echo > ~/.upgraded
+	echo > ~/.updated
 fi
 sudo apt-get install -y curl
 
@@ -177,7 +176,7 @@ mkdir $HOME/tmp
 
 popd
 
-if [[ "$UPGRADE_OS" != "" ]]; then
+if [[ "$UPDATE_OS" != "" ]]; then
 	sudo reboot
 fi
 
