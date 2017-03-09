@@ -31,6 +31,11 @@
 # COMPOSE_VERSION=...           : Docker Compose version to install
 # K8S_VERSION=...               : Kubernetes version of hyperkube
 
+(
+
+echo
+date
+
 set -ex
 
 user="user"
@@ -130,25 +135,6 @@ docker tag nginx unknown
 # curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
 
-# Make sure our env is updated
-##############################
-if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
-	echo 'set -o vi' >> ~/.bashrc
-fi
-
-if ! grep "alias git" ~/.bashrc > /dev/null ; then
-	echo alias git=\'docker run -ti -u 1000:1000 -v /home/user:/tmphome -v \$PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git\' >> ~/.bashrc
-
-fi
-
-if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
-	echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
-fi
-
-if ! grep "the password" ~/.bashrc > /dev/null ; then
-	echo "echo If ever prompted, the password is \\'docker\\'" >> ~/.bashrc
-fi
-
 function git(){
   docker run -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git $*
 }
@@ -168,16 +154,38 @@ for repo in scripts myapp goapp webapp; do
     fi
 done
 
+popd
+
+# End of our docker setup script
+EOF
+
+# Make sure our env is updated
+##############################
+if ! grep 'set -o vi' ~/.bashrc > /dev/null ; then
+	echo 'set -o vi' >> ~/.bashrc
+fi
+
+if ! grep "alias git" ~/.bashrc > /dev/null ; then
+	echo alias git=\'docker run -ti -u 1000:1000 -v /home/user:/tmphome -v \$PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git\' >> ~/.bashrc
+
+fi
+
+if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
+	echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
+fi
+
+if ! grep "the password" ~/.bashrc > /dev/null ; then
+	echo "echo If ever prompted, the password is \\'docker\\'" >> ~/.bashrc
+fi
+
 rm -rf $HOME/layers
 cp -r $HOME/scripts/layers $HOME/
 
 rm -rf $HOME/tmp
 mkdir $HOME/tmp
 
-popd
-
 if [[ "$UPDATE_OS" != "" ]]; then
 	sudo reboot
 fi
 
-EOF
+) 2>&1 | tee -a $HOME/.dojoInstall.log
