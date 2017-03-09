@@ -130,7 +130,7 @@ docker tag nginx unknown
 
 # note this needs to be in here since we're using "sg" and the env vars
 # from outside are not copied into this env
-K8S_VERSION=-v1.3.2
+K8S_VERSION=v1.3.2
 # to get the latest version number, use:
 # curl -sS https://storage.googleapis.com/kubernetes-release/release/stable.txt
 docker pull gcr.io/google_containers/hyperkube-amd64:${K8S_VERSION}
