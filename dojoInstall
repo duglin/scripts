@@ -1,10 +1,11 @@
 # - download the Ubuntu Desktop image - e.g. ubuntu-16.04.1-desktop-amd64.iso
 # - create a Vbox VM:
 #   - 2 gig memory
-#   - 2 CPU
 #   - 20 gig disk
+#   - 2 CPU
 #   - attach ISO
 #   - Enable copy-n-paste
+# - start the VM
 # - during install of Ubuntu
 #   - select "Download updates while installing Ubuntu"
 #   - Erase disk and install Ubuntu
