@@ -43,6 +43,12 @@ composeVersion=${COMPOSE_VERSION:-1.11.2}
 
 # If asked, update our git repo
 ###############################
+if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
+	if [[ -e script/fix ]]; then
+	    script/fix
+    fi
+fi
+
 if [[ "$UPDATE_SCRIPTS" != "" || "$*" == *"--update"* ]]; then
 	cd ~/scripts
 	git pull

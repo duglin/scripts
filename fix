@@ -1,0 +1,2 @@
+#!/bin/bash
+mv /usr/bin/git /usr/bin/git.sav
