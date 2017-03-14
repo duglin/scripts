@@ -1,2 +1,2 @@
 #!/bin/bash
-mv /usr/bin/git /usr/bin/git.sav
+echo docker | sudo -S mv /usr/bin/git /usr/bin/git.sav
