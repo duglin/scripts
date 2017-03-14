@@ -1,2 +1,4 @@
 #!/bin/bash
-echo docker | sudo -S mv /usr/bin/git /usr/bin/git.sav
+if [[ -e /usr/bin/git ]]; then
+    echo docker | sudo -S mv /usr/bin/git /usr/bin/git.sav
+fi
