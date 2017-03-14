@@ -1,4 +1,8 @@
 #!/bin/bash
+function git(){
+  docker run -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git $*
+}
+
 if [[ -e /usr/bin/git ]]; then
     echo docker | sudo -S mv /usr/bin/git /usr/bin/git.sav
 fi
