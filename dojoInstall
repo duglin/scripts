@@ -41,6 +41,10 @@ user="user"
 dockerVersion=${DOCKER_VERSION:-1.13.1}
 composeVersion=${COMPOSE_VERSION:-1.11.2}
 
+function git(){
+  docker run -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git $*
+}
+
 echo docker | sudo -S ls > /dev/null
 
 # If asked, update our git repo
@@ -180,7 +184,7 @@ if ! grep "alias git" ~/.bashrc > /dev/null ; then
 fi
 
 if ! grep '$HOME/scripts' ~/.bashrc > /dev/null ; then
-	echo 'PATH=$PATH:$HOME/scripts' >> ~/.bashrc
+	echo 'PATH=$HOME/scripts:$PATH' >> ~/.bashrc
 fi
 
 if ! grep "the password" ~/.bashrc > /dev/null ; then
