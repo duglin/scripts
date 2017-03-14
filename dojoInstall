@@ -41,11 +41,13 @@ user="user"
 dockerVersion=${DOCKER_VERSION:-1.13.1}
 composeVersion=${COMPOSE_VERSION:-1.11.2}
 
+echo docker | sudo -S ls
+
 # If asked, update our git repo
 ###############################
 if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
-	if [[ -e script/fix ]]; then
-	    script/fix
+    if [[ -e script/fix ]]; then
+        script/fix
     fi
 fi
 
@@ -64,7 +66,7 @@ fi
 #################
 if [[ ! -f ~/.updated || "$UPDATE_OS" != "" || "$*" == *"--os"* ]]; then
 	export UPDATE_OS="true"
-	echo docker | sudo -S apt-get update
+	sudo -S apt-get update
 	sudo apt-get -y upgrade
 	echo > ~/.updated
 fi
