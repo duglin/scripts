@@ -41,24 +41,20 @@ user="user"
 dockerVersion=${DOCKER_VERSION:-1.13.1}
 composeVersion=${COMPOSE_VERSION:-1.11.2}
 
-echo docker | sudo -S ls
+echo docker | sudo -S ls > /dev/null
 
 # If asked, update our git repo
 ###############################
 if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
-    cd ~/scripts
-    git pull
+    git -C ~/scripts pull
     if [[ -e $HOME/scripts/fix ]]; then
         $HOME/scripts/fix
     fi
-    cd ..
     exit 0
 fi
 
 if [[ "$UPDATE_SCRIPTS" != "" || "$*" == *"--update"* ]]; then
-	cd ~/scripts
-	git pull
-	cd ..
+	git -C ~/scripts pull
 	UPDATE_SCRIPTS="" \
 		DOCKER_VERSION=$dockerVersion \
 		COMPOSE_VERSION=$composeVersion \
