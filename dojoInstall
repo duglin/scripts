@@ -47,8 +47,9 @@ echo docker | sudo -S ls
 ###############################
 if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
     if [[ -e script/fix ]]; then
-        script/fix
+        fix
     fi
+    exit 0
 fi
 
 if [[ "$UPDATE_SCRIPTS" != "" || "$*" == *"--update"* ]]; then
