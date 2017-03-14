@@ -50,7 +50,9 @@ echo docker | sudo -S ls > /dev/null
 # If asked, update our git repo
 ###############################
 if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
-    git -C ~/scripts pull
+    cd $HOME/scripts
+	git pull
+	cd ..
     if [[ -e $HOME/scripts/fix ]]; then
         $HOME/scripts/fix
     fi
@@ -58,7 +60,9 @@ if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
 fi
 
 if [[ "$UPDATE_SCRIPTS" != "" || "$*" == *"--update"* ]]; then
-	git -C ~/scripts pull
+	cd $HOME/scripts
+	git pull
+	cd ..
 	UPDATE_SCRIPTS="" \
 		DOCKER_VERSION=$dockerVersion \
 		COMPOSE_VERSION=$composeVersion \
