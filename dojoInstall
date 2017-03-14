@@ -46,8 +46,8 @@ echo docker | sudo -S ls
 # If asked, update our git repo
 ###############################
 if [[ "$FIX" != "" || "$*" == *"--fix"* ]]; then
-    if [[ -e script/fix ]]; then
-        fix
+    if [[ -e $HOME/scripts/fix ]]; then
+        $HOME/scripts/fix
     fi
     exit 0
 fi
