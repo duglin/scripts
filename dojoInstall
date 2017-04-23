@@ -109,6 +109,13 @@ if [[ "$tmpVer" != "$dockerVersion" ]]; then
     sudo service docker start
 fi
 
+# Hide git since Docker seems to install it and for demo purposes
+# we want to use the Dockerized version of it
+#################################################################
+if which git > /dev/null ; then
+	sudo mv $(which git) $(which git).sav
+fi
+
 # Install Compose
 #################
 tmpVer=`docker-compose version | grep "compose version" | sed "s/.*version \([^, ]*\).*/\1/"`
