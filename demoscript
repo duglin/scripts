@@ -9,7 +9,7 @@ normal=$(tput sgr0)
 delay=${DELAY:-"0.02"}
 skip="$SKIP"
 save="$SAVE"
-saveTar=$(readlink -f $(dirname "$0"))/${scriptName}.tar
+saveTar=$(cd $(dirname "$0");pwd)/${scriptName}.tar
 recover="$RECOVER"
 useSaved="$USESAVED"
 
@@ -17,6 +17,18 @@ if [[ "${useSaved}" != "" && ! -e "${saveTar}" ]]; then
 	echo "Missing saved output file: ${saveTar}"
 	exit 1
 fi
+
+if [[ "${save}" != "" ]]; then
+	rm -f "${saveTar}"
+fi
+
+function myscript() {
+    if [[ "$(uname)" == Darwin ]]; then
+    	script -q -a /dev/null $*
+    else
+    	script -efq -a /dev/null -c "$*"
+    fi
+}
 
 function slowType() {
 	str="$*"
@@ -69,6 +81,7 @@ function doit() {
 	local shouldfail=""
 	local noexec=""
 	local fakeit=""
+	local noscroll=${NOSCROLL:-}
 
 	if [[ "$useSaved" != "" ]]; then
 		fakeit="1"
@@ -83,6 +96,8 @@ function doit() {
 			"--shouldfail" ) shouldfail="1" ;;
 			"--noexec"     ) noexec="1"     ;;
 			"--usesaved"   ) fakeit="1"     ;;
+			"--noscroll"   ) noscroll="1"   ;;
+			"--scroll"     ) noscroll=""    ;;
 		esac
 	done
 
@@ -98,7 +113,7 @@ function doit() {
 	local lines=$(tput lines)
 	let lines=lines-3
 	moreCMD="more -$lines"
-	if [[ "$skip" != "" ]]; then
+	if [[ "$skip" != "" || "$noscroll" != "" ]]; then
 		moreCMD="cat"
 	fi
 
@@ -106,14 +121,14 @@ function doit() {
 	if [[ "$noexec" == "" ]]; then
 		if [[ "$fakeit" == "" ]]; then
 			# Run the cmd
-			bash -c " $* " |& tee out | ${moreCMD[@]}
+			bash -c " $* " 2>&1 | tee out | ${moreCMD[@]}
 			rc=${PIPESTATUS[0]}
 
 			# Save the output if we're asked to
 			if [[ "$save" != "" ]]; then
 				cp out "${saveFile}"
-				tar --delete -f "${saveTar}" "${saveFile}" > /dev/null 2>&1 || true
-				tar -uf "${saveTar}" "${saveFile}"
+				# tar --delete -f "${saveTar}" "${saveFile}" > /dev/null 2>&1 || true
+				tar -rf "${saveTar}" "${saveFile}"
 				rm "${saveFile}"
 			fi
 		else
@@ -224,7 +239,7 @@ function ttyDoit() {
 			sleep 0.2
         done
         echo
-    ) | script -efq -a /dev/null -c "$*"
+    ) | myscript $*
 	rc=${PIPESTATUS[1]}
 	echo -n $normal
 	echo
