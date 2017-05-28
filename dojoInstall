@@ -190,8 +190,9 @@ export DASHBOARD_URL=$HOME/scripts/kubernetes-dashboard.yaml
 
 $HOME/scripts/kubedind up
 
-DELAY=0 SKIP=1 $HOME/scripts/podDemo
-DELAY=0 SKIP=1 $HOME/scripts/rsDemo
+docker exec kube-node1 docker pull ibmdojo/httpd
+docker exec kube-node2 docker pull ibmdojo/httpd
+docker exec kube-master docker pull ibmdojo/httpd
 
 $HOME/scripts/kubedind down
 
