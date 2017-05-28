@@ -152,25 +152,6 @@ docker pull redis:3-alpine
 docker tag ubuntu:14.04 ubuntu
 docker tag nginx unknown
 
-# Set up our Kube env
-# Uses: https://github.com/Mirantis/kubeadm-dind-cluster
-########################################################
-docker pull mirantis/kubeadm-dind-cluster:v1.6
-wget https://cdn.rawgit.com/Mirantis/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.6.sh -O ~/scripts/kubedind
-chmod +x ~/scripts/kubedind
-sed -i "s/docker pull/\#docker pull/" ~/scripts/kubedind
-
-curl -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/amd64/kubectl > ~/scripts/kubectl
-chmod +x ~/scripts/kubectl
-
-curl -L https://rawgit.com/kubernetes/dashboard/bfab10151f012d1acc5dfb1979f3172e2400aa3c/src/deploy/kubernetes-dashboard.yaml | \
-	sed "s/Always/IfNotPresent/"  > ~/scripts/kubernetes-dashboard.yaml
-
-export DASHBOARD_URL=$HOME/user/scripts/kubernetes-dashboard.yaml
-
-kubedind up
-kubedind down
-
 # Set up git
 ############
 function git(){
@@ -196,6 +177,25 @@ popd
 
 # End of our docker setup script
 EOF
+
+# Set up our Kube env
+# Uses: https://github.com/Mirantis/kubeadm-dind-cluster
+########################################################
+docker pull mirantis/kubeadm-dind-cluster:v1.6
+wget https://cdn.rawgit.com/Mirantis/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.6.sh -O ~/scripts/kubedind
+chmod +x ~/scripts/kubedind
+sed -i "s/docker pull/\#docker pull/" ~/scripts/kubedind
+
+curl -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/amd64/kubectl > ~/scripts/kubectl
+chmod +x ~/scripts/kubectl
+
+curl -L https://rawgit.com/kubernetes/dashboard/bfab10151f012d1acc5dfb1979f3172e2400aa3c/src/deploy/kubernetes-dashboard.yaml | \
+	sed "s/Always/IfNotPresent/"  > ~/scripts/kubernetes-dashboard.yaml
+
+export DASHBOARD_URL=$HOME/user/scripts/kubernetes-dashboard.yaml
+
+kubedind up
+kubedind down
 
 # Make sure our env is updated
 ##############################
