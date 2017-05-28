@@ -189,6 +189,10 @@ curl -L https://rawgit.com/kubernetes/dashboard/bfab10151f012d1acc5dfb1979f3172e
 export DASHBOARD_URL=$HOME/scripts/kubernetes-dashboard.yaml
 
 $HOME/scripts/kubedind up
+
+DELAY=0 SKIP=1 $HOME/scripts/podDemo
+DELAY=0 SKIP=1 $HOME/scripts/rsDemo
+
 $HOME/scripts/kubedind down
 
 popd
