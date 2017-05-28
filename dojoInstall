@@ -187,7 +187,7 @@ chmod +x ~/scripts/kubectl
 curl -L https://rawgit.com/kubernetes/dashboard/bfab10151f012d1acc5dfb1979f3172e2400aa3c/src/deploy/kubernetes-dashboard.yaml | \
 	sed "s/Always/IfNotPresent/"  > ~/scripts/kubernetes-dashboard.yaml
 
-export DASHBOARD_URL=$HOME/user/scripts/kubernetes-dashboard.yaml
+export DASHBOARD_URL=$HOME/scripts/kubernetes-dashboard.yaml
 
 $HOME/scripts/kubedind up
 $HOME/scripts/kubedind down
