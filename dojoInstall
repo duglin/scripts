@@ -129,7 +129,6 @@ fi
 #######################################################
 sg docker -c bash <<'EOF'
 
-set -ex
 pushd $HOME
 
 # Get/refresh some images we'll use during the Dojo
