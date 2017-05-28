@@ -173,11 +173,6 @@ for repo in scripts myapp goapp webapp; do
     fi
 done
 
-popd
-
-# End of our docker setup script
-EOF
-
 # Set up our Kube env
 # Uses: https://github.com/Mirantis/kubeadm-dind-cluster
 ########################################################
@@ -196,6 +191,11 @@ export DASHBOARD_URL=$HOME/user/scripts/kubernetes-dashboard.yaml
 
 kubedind up
 kubedind down
+
+popd
+
+# End of our docker setup script
+EOF
 
 # Make sure our env is updated
 ##############################
