@@ -16,8 +16,6 @@
 #   - select: log in automatically
 #
 # Then run the VM:
-# - Remove extra icons from the launch bar
-# - Add terminal to launch bar
 # - Insert the Guest Additions CD, run, eject
 # - Go to "Software and updates", "Updates" tab, "Auto check for updates":Never
 # - Reboot
@@ -76,6 +74,11 @@ if [[ ! -f ~/.updated || "$UPDATE_OS" != "" || "$*" == *"--os"* ]]; then
 	export UPDATE_OS="true"
 	sudo -S apt-get update
 	sudo apt-get -y upgrade
+
+	# Set up the Launcher icons we want
+	gsettings set com.canonical.Unity.Launcher favorites \
+	 "['application://firefox.desktop',  'application://gnome-terminal.desktop', 'unity://expo-icon', 'unity://devices']"
+
 	echo > ~/.updated
 fi
 sudo apt-get install -y curl
