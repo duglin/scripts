@@ -1,6 +1,10 @@
 #!/bin/bash
 
 dir=$(dirname "$0")
+homeDir=$(cd $dir/.. ; pwd)/
+if [[ "$homeDir" == "$PWD"/ ]]; then
+  homeDir=""
+fi
 source $dir/demoscript
 PATH=$(readlink -f $dir):$PATH
 
@@ -10,8 +14,8 @@ echo
 
 set -e
 
-doit --ignorerc cd $dir/../myapp
-cd $dir/../myapp
+doit --ignorerc cd ${homeDir}myapp
+cd ${homeDir}myapp
 rm -f myapp
 doit cat Makefile
 
@@ -20,13 +24,18 @@ doit --ignorerc make
 rm -f myapp
 doit make -f Makefile1
 
-background ./myapp 8080
+doit --noexec ./myapp 8080
+./myapp 8080 2> /dev/null &
+appPID=$!
 
-sleep 1
+wait curl -s localhost:8080
 echo
 
 doit curl -s localhost:8080
-doit --ignorerc curl -s localhost:8080/stop
+
+comment --pause "now stopping the application (same as ctrl-c)"
+disown $appPID
+kill -9 $appPID
 
 doit ls -l
 rm -f myapp
@@ -34,4 +43,12 @@ doit make -f Makefile2
 doit ls -l
 
 doit --shouldfail which git
-# doit alias git
+
+# Define it in here to so we can see it
+function git(){
+  docker run -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git $*
+}
+
+doit --noexec command -V git
+command -V git
+echo

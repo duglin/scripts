@@ -36,8 +36,8 @@ echo && date
 set -ex
 
 user="user"
-dockerVersion=${DOCKER_VERSION:-1.13.1}
-composeVersion=${COMPOSE_VERSION:-1.11.2}
+dockerVersion=${DOCKER_VERSION:-17.09.0}
+composeVersion=${COMPOSE_VERSION:-17.09.0}
 
 function git(){
   docker run -u 1000:1000 -v /home/user:/tmphome -v $PWD:/wd -w /wd -e HOME=/tmphome ibmdojo/git $*

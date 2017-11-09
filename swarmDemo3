@@ -9,5 +9,5 @@ node3IP=$(docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}
 set -e
 
 comment Upgrade the service from 1.0 to 2.0
-comment In another window run: watch -d -n 0.5 curl -s $node3IP
+comment In another window run: docker exec -ti node3 watch -d -n 1 curl -s 127.0.0.1
 doit docker service update --image=docker:5000/myapp:2.0 myapp

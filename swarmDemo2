@@ -17,6 +17,7 @@ set -e
 comment Deploy v1.0 of \"myapp\" as a service
 doit docker service create --name myapp -p 80:80 docker:5000/myapp:1.0
 
+comment Check to see its status
 doit docker service ls
 echo -e $bold"Waiting for it to start...\\n"$normal
 while !(docker service ls|grep "1/1"&>/dev/null);do sleep 1;done
