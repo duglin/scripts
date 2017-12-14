@@ -44,7 +44,6 @@ doit docker inspect --format "{{.NetworkSettings.Networks.bridge.IPAddress}}" no
 node3IP=$(cat out)
 dockerIP=$(ifconfig docker0 | grep "inet addr" | sed "s/[^:]*:\([^ ]*\).*/\1/")
 docker exec node3 sh -c "echo $dockerIP docker >> /etc/hosts"
-doit $(cat node3.cmd)
 
 comment Waiting for node 3 to pick up the networking info
 while !(curl -s $node3IP); do sleep 1;done
